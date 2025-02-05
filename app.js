@@ -22,7 +22,7 @@ app.get("/", (req, res) => {
   res.sendFile(__dirname + "/public/index.html");
 });
 
-app.get("/chat.html", (req, res) => {
+app.get("/chat", (req, res) => {
   res.sendFile(__dirname + "/public/chat.html");
 });
 

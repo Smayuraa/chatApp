@@ -10,7 +10,7 @@
 </head>
 
 <body class="ltr text-center">
-  <form id="nicknameForm" class="form-signin">
+  <form action="/chat" id="nicknameForm" class="form-signin">
     <h1 class="h3 mb-3 font-weight-normal">
       Please enter your username
     </h1>
@@ -40,7 +40,7 @@
       if (nicknameInput.value) {
         localStorage.setItem("nickname", nicknameInput.value);
         localStorage.setItem("chatroom", chatroom.value);
-        window.location.replace("/chat.html");
+        window.location.replace("/chat");
       }
     });
   </script>
