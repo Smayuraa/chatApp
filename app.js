@@ -13,6 +13,9 @@ const PORT = process.env.PORT || 3000;
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/public/index.html");
 });
+app.get("/chat.html", (req, res) => {
+  res.sendFile(__dirname + "/public/chat.html");
+});
 
 server.listen(PORT, () => {
   console.log(`Server started on ${PORT}`);
