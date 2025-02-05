@@ -1,5 +1,4 @@
 const http = require("http");
-
 const express = require("express");
 const { Server } = require("socket.io");
 
@@ -7,26 +6,28 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 
-// Static Folder
 app.use(express.static("public"));
 
 const PORT = process.env.PORT || 3000;
 
-server.listen(PORT, () => {
-  console.log(`Server started on 3000`);
+app.get("/", (req, res) => {
+  res.sendFile(__dirname + "/public/index.html");
 });
 
-// Setup Websocket
+server.listen(PORT, () => {
+  console.log(`Server started on ${PORT}`);
+});
+
 let users = [];
 
 io.use((socket, next) => {
   const token = socket.handshake.auth.token;
   const id = 123456;
 
-  if (token == undefined) {
-    console.log("fuck u");
+  if (!token) {
+    console.log("Unauthorized");
   } else if (token != id) {
-    console.log("fuck u two");
+    console.log("Invalid token");
   } else {
     next();
   }
@@ -37,10 +38,9 @@ const chatNameSpace = io.of("/chat");
 chatNameSpace.on("connection", (socket) => {
   console.log(`User Connected: ${socket.id}`);
 
-  // Listening
-  socket.on("disconnect", (data) => {
+  socket.on("disconnect", () => {
     const index = users.findIndex((s) => s.id == socket.id);
-    if (index != -1) users.splice(index, 1);
+    if (index !== -1) users.splice(index, 1);
     chatNameSpace.emit("online", users);
     console.log("User Disconnected");
   });
@@ -48,14 +48,10 @@ chatNameSpace.on("connection", (socket) => {
   socket.on("chat message", (data) => {
     const date = new Date();
     let hours = date.getHours();
-    let miniutes = date.getMinutes();
-    if (+hours <= 9) {
-      hours = `0${hours}`;
-    }
-    if (+miniutes <= 9) {
-      miniutes = `0${hours}`;
-    }
-    data.date = `${hours}:${miniutes}`;
+    let minutes = date.getMinutes();
+    hours = hours < 10 ? `0${hours}` : hours;
+    minutes = minutes < 10 ? `0${minutes}` : minutes;
+    data.date = `${hours}:${minutes}`;
     chatNameSpace.to(data.roomNumber).emit("chat message", data);
   });
 
@@ -72,7 +68,6 @@ chatNameSpace.on("connection", (socket) => {
       roomNumber: data.roomNumber,
     });
     socket.join(data.roomNumber);
-
     chatNameSpace.emit("online", users);
     console.log(`${data.nickname} connected`);
   });
