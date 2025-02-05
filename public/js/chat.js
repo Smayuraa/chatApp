@@ -53,29 +53,11 @@ pvChatForm.addEventListener("submit", (e) => {
 chatNamespace.on("chat message", (data) => {
   feedback.innerHTML = "";
   chatBox.innerHTML += `<li class="alert alert-light">
-                            <span
-                                class="text-dark font-weight-normal"
-                                style="font-size: 13pt"
-                                >${data.nickname}
-                                
-                            <span
-                                class="
-                                    text-muted
-                                    font-italic font-weight-light
-                                    m-2
-                                "
-                                style="font-size: 9pt"
-                                >${data.date} hours</span
-                            >
-                            <p
-                                class="alert alert-info mt-2"
-                                style="font-family: persian01"
-                            >
-                            ${data.message}
-                            </p>
+                            <span class="text-dark font-weight-normal" style="font-size: 13pt">${data.nickname}
+                            <span class="text-muted font-italic font-weight-light m-2" style="font-size: 9pt">${data.date} hours</span>
+                            <p class="alert alert-info mt-2" style="font-family: persian01">${data.message}</p>
                             </li>`;
-  chatContainer.scrollTop =
-    chatContainer.scrollHeight - chatContainer.clientHeight;
+  chatContainer.scrollTop = chatContainer.scrollHeight - chatContainer.clientHeight;
 });
 
 messageInput.addEventListener("keypress", (e) => {
@@ -84,7 +66,7 @@ messageInput.addEventListener("keypress", (e) => {
 
 chatNamespace.on("typing", (data) => {
   if (roomNumber == data.roomNumber) {
-    feedback.innerHTML = data;
+    feedback.innerHTML = `${data.name} is typing...`;
   }
 });
 
@@ -102,15 +84,11 @@ chatNamespace.on("online", (data) => {
     if (roomNumber == user.roomNumber) {
       onlineUsers.innerHTML += `
             <li>
-            <button type="button" class="btn btn-light mx-2 p-2" data-toggle="modal" data-target="#pvChat" data-id=${
-              user.id
-            } data-client=${user.name}
-            ${user.id === chatNamespace.id ? "disabled" : ""}>
+            <button type="button" class="btn btn-light mx-2 p-2" data-toggle="modal" data-target="#pvChat" data-id="${user.id}" data-client="${user.name}" ${user.id === chatNamespace.id ? "disabled" : ""}>
             ${user.name}
             <span class="badge badge-success"> </span>
-            </buton>
-            </li>
-        `;
+            </button>
+            </li>`;
     }
   });
 });
